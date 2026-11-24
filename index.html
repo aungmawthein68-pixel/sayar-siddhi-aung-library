@@ -1,0 +1,87 @@
+HTML
+
+<!DOCTYPE html>
+<html lang="my">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#123d2b">
+<title>ဆရာ သိဒ္ဓိအောင် စာကြည့်တိုက်</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f5f1e5;color:#26352a}
+header{background:#123d2b;color:#f5d77a;text-align:center;padding:30px 15px}
+header h1{font-size:25px;margin:8px}
+header p{margin:8px;color:#fff0c1}
+nav{background:#194d37;padding:12px;text-align:center;color:white}
+main{max-width:850px;margin:auto;padding:20px}
+h2{color:#174b34}
+input{width:100%;padding:14px;border:1px solid #c9b77a;border-radius:9px;font-size:16px}
+.categories{display:flex;flex-wrap:wrap;gap:8px;margin:15px 0}
+button{border:0;border-radius:8px;padding:10px 14px;background:#174b34;color:white;font-size:14px}
+button.active{background:#c49a35;color:#182b20}
+.book{background:white;border:1px solid #e4d8b7;border-radius:12px;padding:16px;margin:12px 0}
+.book h3{color:#174b34;margin:0 0 8px}
+.book p{color:#666}
+.read{background:#c49a35;color:#172d20}
+#reader{display:none;background:white;padding:20px;border-radius:12px;margin-top:20px;line-height:1.9}
+footer{text-align:center;background:#123d2b;color:#f5d77a;padding:22px;margin-top:35px}
+</style>
+</head>
+<body>
+<header>
+<h1>📚 ဆရာ သိဒ္ဓိအောင် စာကြည့်တိုက်</h1>
+<p>စာပေ • ပညာ • ဗဟုသုတ • မြန်မာ့ယဉ်ကျေးမှု</p>
+</header>
+<nav>မြန်မာ့စာပေကို မြတ်နိုးသူများအတွက်</nav>
+<main>
+<h2>စာအုပ်များ ရှာဖွေရန်</h2>
+<input id="search" placeholder="စာအုပ်အမည် ရှာဖွေပါ..." oninput="showBooks()">
+<div class="categories">
+<button class="active" onclick="choose('အားလုံး',this)">အားလုံး</button>
+<button onclick="choose('မြန်မာ့ယဉ်ကျေးမှု',this)">မြန်မာ့ယဉ်ကျေးမှု</button>
+<button onclick="choose('ဗဟုသုတ',this)">ဗဟုသုတ</button>
+<button onclick="choose('ပညာရေး',this)">ပညာရေး</button>
+</div>
+<div id="books"></div>
+<div id="reader">
+<h2 id="bookTitle"></h2>
+<p id="bookText"></p>
+<button onclick="closeBook()">ပြန်ပိတ်ရန်</button>
+</div>
+</main>
+<footer>
+<p>ဆရာ သိဒ္ဓိအောင် စာကြည့်တိုက်</p>
+<p>စာပေဖြင့် အသိပညာ တိုးပွားပါစေ။</p>
+</footer>
+<script>
+const data=[
+{title:"မြန်မာ့ရိုးရာယဉ်ကျေးမှု",cat:"မြန်မာ့ယဉ်ကျေးမှု",desc:"မြန်မာ့ရိုးရာဓလေ့နှင့် ယဉ်ကျေးမှုဆိုင်ရာ မိတ်ဆက်",text:"မြန်မာ့ယဉ်ကျေးမှုသည် ရှေးအစဉ်အဆက် ထိန်းသိမ်းလာခဲ့သော အဖိုးတန်အမွေအနှစ်တစ်ရပ်ဖြစ်သည်။"},
+{title:"ဗဟုသုတလေ့လာရေး",cat:"ဗဟုသုတ",desc:"နေ့စဉ်လေ့လာသင့်သော အထွေထွေဗဟုသုတ",text:"အသိပညာသည် လူတစ်ဦး၏ ဘဝတိုးတက်ရေးအတွက် အရေးကြီးသော အခြေခံအုတ်မြစ်ဖြစ်သည်။"},
+{title:"ပညာရေးနှင့် အနာဂတ်",cat:"ပညာရေး",desc:"ပညာရေး၏ အရေးပါမှု",text:"ပညာရေးသည် လူ့ဘဝကို တိုးတက်စေပြီး အနာဂတ်အတွက် အခွင့်အလမ်းများ ဖန်တီးပေးသည်။"}
+];
+let category="အားလုံး";
+function choose(c,b){
+category=c;
+document.querySelectorAll(".categories button").forEach(x=>x.classList.remove("active"));
+b.classList.add("active");
+showBooks();
+}
+function showBooks(){
+let q=document.getElementById("search").value.toLowerCase();
+let list=data.filter(x=>(category==="အားလုံး"||x.cat===category)&&x.title.toLowerCase().includes(q));
+document.getElementById("books").innerHTML=list.length?list.map((x,i)=>`
+<div class="book"><h3>📖 ${x.title}</h3><p>${x.desc}</p>
+<button class="read" onclick="readBook('${x.title}')">ဖတ်ရှုရန်</button></div>`).join(""):"စာအုပ်မတွေ့ပါ။";
+}
+function readBook(title){
+let b=data.find(x=>x.title===title);
+document.getElementById("bookTitle").innerText=b.title;
+document.getElementById("bookText").innerText=b.text;
+document.getElementById("reader").style.display="block";
+}
+function closeBook(){document.getElementById("reader").style.display="none"}
+showBooks();
+</script>
+</body>
+</html>
